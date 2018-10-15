@@ -16,6 +16,8 @@
 #include "episode.h"
 #include "statistic.h"
 
+int last_op = -1
+
 int main(int argc, const char* argv[]) {
 	std::cout << "2048-Demo: ";
 	std::copy(argv, argv + argc, std::ostream_iterator<const char*>(std::cout, " "));

@@ -13,6 +13,9 @@
  * (12) (13) (14) (15)
  *
  */
+
+//slide
+
 class board {
 public:
 	typedef uint32_t cell;
@@ -63,8 +66,9 @@ public:
 	 * return the reward of the action, or -1 if the action is illegal
 	 */
 	reward slide(unsigned opcode) {
-		switch (opcode & 0b11) {
-		case 0: return slide_up();
+		last_op = opcode & 0b11;
+		switch (opcode & 0b11) { //fast mod 4
+		case 0: return slide_up()
 		case 1: return slide_right();
 		case 2: return slide_down();
 		case 3: return slide_left();
@@ -72,8 +76,12 @@ public:
 		}
 	}
 
+	//to do
 	reward slide_left() {
 		board prev = *this;
+		// <- 1 2 3
+		// 
+
 		reward score = 0;
 		for (int r = 0; r < 4; r++) {
 			auto& row = tile[r];
@@ -85,7 +93,7 @@ public:
 				if (hold) {
 					if (tile == hold) {
 						row[top++] = ++tile;
-						score += (1 << tile);
+						score += (1 << tile); //
 						hold = 0;
 					} else {
 						row[top++] = hold;
@@ -97,6 +105,7 @@ public:
 			}
 			if (hold) tile[r][top] = hold;
 		}
+
 		return (*this != prev) ? score : -1;
 	}
 	reward slide_right() {

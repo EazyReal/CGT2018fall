@@ -10,6 +10,8 @@
 #include "action.h"
 #include "agent.h"
 
+//take turn init = 9
+
 class statistic;
 
 class episode {
@@ -37,7 +39,7 @@ public:
 	}
 	agent& take_turns(agent& play, agent& evil) {
 		ep_time = millisec();
-		return (std::max(step() + 1, size_t(2)) % 2) ? play : evil;
+		return (std::max(step(), size_t(8)) % 2) ? play : evil; //9init
 	}
 	agent& last_turns(agent& play, agent& evil) {
 		return take_turns(evil, play);

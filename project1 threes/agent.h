@@ -8,6 +8,11 @@
 #include "board.h"
 #include "action.h"
 
+//rnd env : random bag size = 3 done by bag and op_space last_op
+//taketurn : init = 9 block : done by man(x,8)%2
+//slide
+//output
+
 class agent {
 public:
 	agent(const std::string& args = "") {
@@ -59,24 +64,44 @@ protected:
  * 2-tile: 90%
  * 4-tile: 10%
  */
-class rndenv : public random_agent {
+class rndenv : public random_agent { //evil as instance
 public:
 	rndenv(const std::string& args = "") : random_agent("name=random role=environment " + args),
-		space({ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 }), popup(0, 9) {}
+		space({ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 }), popup(0, 9) {
+			idx = 0;
+		}
+
 
 	virtual action take_action(const board& after) {
-		std::shuffle(space.begin(), space.end(), engine);
-		for (int pos : space) {
-			if (after(pos) != 0) continue;
-			board::cell tile = popup(engine) ? 1 : 2;
-			return action::place(pos, tile);
+		if(idx == 0) std::shuffle(bag, bag + 3, engine);;
+
+		if(~last_direction){
+			std::shuffle(space.begin(), space.end(), engine);
+			for (int pos : space) {
+				if (after(pos) != 0) continue;
+				board::cell tile = bag[idx];
+				idx = (idx + 1) % 3;
+				return action::place(pos, tile);
+			}
+			return action();
+		}else{
+			std::shuffle(opspace[last_op], opspace[last_op] + 4, engine);
+			for (int pos : opspace[last_op]) {
+				if (after(pos) != 0) continue;
+				board::cell tile = bag[idx];
+				idx = (idx + 1) % 3;
+				return action::place(pos, tile);
+			}
+			return action();
 		}
-		return action();
 	}
 
 private:
 	std::array<int, 16> space;
-	std::uniform_int_distribution<int> popup;
+	int opspace[4][4] = { 12, 13, 14, 15, 0, 4, 8, 12, 0, 1, 2, 3, 3, 7, 11, 15 }; //urdl
+	//std::uniform_int_distribution<int> popup;
+	int bag[3] = {0, 1, 2};
+	int idx;
 };
 
 /**

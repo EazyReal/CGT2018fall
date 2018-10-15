@@ -8,6 +8,8 @@
 #include "agent.h"
 #include "episode.h"
 
+//todo
+
 class statistic {
 public:
 	/**
@@ -66,6 +68,7 @@ public:
 			edu += ep.time(action::place::type);
 		}
 
+		/*
 		std::ios ff(nullptr);
 		ff.copyfmt(std::cout);
 		std::cout << std::fixed << std::setprecision(0);
@@ -88,6 +91,7 @@ public:
 			std::cout << std::endl;
 		}
 		std::cout << std::endl;
+		*/
 	}
 
 	void summary() const {
