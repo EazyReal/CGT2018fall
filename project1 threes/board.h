@@ -15,6 +15,7 @@
  */
 
 //slide
+extern int last_op;
 
 class board {
 public:
@@ -68,7 +69,7 @@ public:
 	reward slide(unsigned opcode) {
 		last_op = opcode & 0b11;
 		switch (opcode & 0b11) { //fast mod 4
-		case 0: return slide_up()
+		case 0: return slide_up();
 		case 1: return slide_right();
 		case 2: return slide_down();
 		case 3: return slide_left();
@@ -171,7 +172,7 @@ public:
 		out << "+------------------------+" << std::endl;
 		for (auto& row : b.tile) {
 			out << "|" << std::dec;
-			for (auto t : row) out << std::setw(6) << ((1 << t) & -2u);
+			for (auto t : row) out << std::setw(6) << ((1 << t) & -2u);//
 			out << "|" << std::endl;
 		}
 		out << "+------------------------+" << std::endl;

@@ -16,7 +16,7 @@
 #include "episode.h"
 #include "statistic.h"
 
-int last_op = -1
+int last_op = -1;
 
 int main(int argc, const char* argv[]) {
 	std::cout << "2048-Demo: ";
@@ -66,9 +66,12 @@ int main(int argc, const char* argv[]) {
 
 		stat.open_episode(play.name() + ":" + evil.name());
 		episode& game = stat.back();
+
+		last_op = -1;
 		while (true) {
 			agent& who = game.take_turns(play, evil);
 			action move = who.take_action(game.state());
+			std::cout << game.state(); //
 			if (game.apply_action(move) != true) break;
 			if (who.check_for_win(game.state())) break;
 		}

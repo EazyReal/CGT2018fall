@@ -12,6 +12,7 @@
 //taketurn : init = 9 block : done by man(x,8)%2
 //slide
 //output
+extern int last_op;
 
 class agent {
 public:
@@ -67,7 +68,7 @@ protected:
 class rndenv : public random_agent { //evil as instance
 public:
 	rndenv(const std::string& args = "") : random_agent("name=random role=environment " + args),
-		space({ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 }), popup(0, 9) {
+		space({ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 })/*, popup(0, 9)*/ {
 			idx = 0;
 		}
 
@@ -75,7 +76,7 @@ public:
 	virtual action take_action(const board& after) {
 		if(idx == 0) std::shuffle(bag, bag + 3, engine);;
 
-		if(~last_direction){
+		if(~last_op){
 			std::shuffle(space.begin(), space.end(), engine);
 			for (int pos : space) {
 				if (after(pos) != 0) continue;

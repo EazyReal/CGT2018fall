@@ -92,9 +92,10 @@ public:
 	board::reward apply(board& b) const {
 		return b.place(position(), tile());
 	}
+
 	std::ostream& operator >>(std::ostream& out) const {
 		const char* idx = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ?";
-		return out << idx[position()] << idx[std::min(tile(), 36u)];
+		return out << idx[position()] << idx[std::min(tile(), 36u)]; //tile origin?
 	}
 	std::istream& operator <<(std::istream& in) {
 		const char* idx = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
