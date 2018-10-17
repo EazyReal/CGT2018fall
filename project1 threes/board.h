@@ -67,7 +67,7 @@ public:
 	 * return the reward of the action, or -1 if the action is illegal
 	 */
 	reward slide(unsigned opcode) {
-		last_op = opcode & 0b11;
+		last_op = opcode & 0b11; // for random env random space
 		switch (opcode & 0b11) { //fast mod 4
 		case 0: return slide_up();
 		case 1: return slide_right();
@@ -78,24 +78,34 @@ public:
 	}
 
 	//to do
+
+	inline bool mergible(cell a, cell b){
+		if(a == 1 && b == 2) return true;
+		if(a == 2 && b == 1) return true;
+		return a == b;
+	}
+
 	reward slide_left() {
 		board prev = *this;
-		// <- 1 2 3
-		// 
+		// <- 1 2 3 => 3 3 0 ?
+		// <- 3 3 3 => 6 3 0 or 3 6 0?
+		//need to be blocked to be merged one time merged one on one line
 
 		reward score = 0;
 		for (int r = 0; r < 4; r++) {
+			bool merged = false;
 			auto& row = tile[r];
 			int top = 0, hold = 0;
 			for (int c = 0; c < 4; c++) {
 				int tile = row[c];
-				if (tile == 0) continue;
+				//if (tile == 0) continue;
 				row[c] = 0;
 				if (hold) {
-					if (tile == hold) {
+					if (mergible(tile, hold) &&  !merged) {
 						row[top++] = ++tile;
-						score += (1 << tile); //
+						//score += (1 << tile); //
 						hold = 0;
+						merged = true;
 					} else {
 						row[top++] = hold;
 						hold = tile;
@@ -107,6 +117,7 @@ public:
 			if (hold) tile[r][top] = hold;
 		}
 
+		//reward = f(*this)-f(prev) where f = score function sigma(3(log2(s/3)+1))
 		return (*this != prev) ? score : -1;
 	}
 	reward slide_right() {

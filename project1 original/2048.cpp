@@ -67,14 +67,17 @@ int main(int argc, const char* argv[]) {
 		while (true) {
 			agent& who = game.take_turns(play, evil);
 			action move = who.take_action(game.state());
+			//std::cout << move;
+			//std::cout << game.state(); //
 			if (game.apply_action(move) != true) break;
 			if (who.check_for_win(game.state())) break;
 		}
 		agent& win = game.last_turns(play, evil);
+		//std::cout << game << std::endl;
 		stat.close_episode(win.name());
-
 		play.close_episode(win.name());
 		evil.close_episode(win.name());
+		std::cout << game << std::endl;//
 	}
 
 	if (summary) {

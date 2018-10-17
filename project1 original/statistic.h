@@ -8,6 +8,8 @@
 #include "agent.h"
 #include "episode.h"
 
+// data = list of episodes
+
 class statistic {
 public:
 	/**

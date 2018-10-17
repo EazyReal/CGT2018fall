@@ -49,8 +49,8 @@ public:
 	size_t step(unsigned who = -1u) const {
 		int size = ep_moves.size(); // 'int' is important for handling 0
 		switch (who) {
-		case action::slide::type: return (size - 1) / 2;
-		case action::place::type: return (size - (size - 1) / 2);
+		case action::slide::type: return (size - 8) / 2; //change size-1 to size -8
+		case action::place::type: return (size - (size - 8) / 2);
 		default:                  return size;
 		}
 	}
@@ -63,7 +63,7 @@ public:
 			if (ep_moves.size()) time += ep_moves[0].time, i = 1;
 			// no break;
 		case action::slide::type:
-			while (i < ep_moves.size()) time += ep_moves[i].time, i += 2;
+			while (i < ep_moves.size()) time += ep_moves[i].time, i += 2; //?
 			break;
 		default:
 			time = ep_close.when - ep_open.when;
@@ -72,7 +72,7 @@ public:
 		return time;
 	}
 
-	std::vector<action> actions(unsigned who = -1u) const {
+	std::vector<action> actions(unsigned who = -1u) const { //may need change //no by li-shan //actually no call wtf
 		std::vector<action> res;
 		size_t i = 2;
 		switch (who) {
@@ -115,15 +115,15 @@ public:
 
 protected:
 
-	struct move {
+	struct move { // struct for move outputs
 		action code;
-		board::reward reward;
+		board::reward reward; //need change after proj2
 		time_t time;
 		move(action code = {}, board::reward reward = 0, time_t time = 0) : code(code), reward(reward), time(time) {}
 
 		operator action() const { return code; }
 		friend std::ostream& operator <<(std::ostream& out, const move& m) {
-			out << m.code;
+			out << m.code; //code??
 			if (m.reward) out << '[' << std::dec << m.reward << ']';
 			if (m.time) out << '(' << std::dec << m.time << ')';
 			return out;
@@ -146,7 +146,7 @@ protected:
 		}
 	};
 
-	struct meta {
+	struct meta { //struct for open/close episode output
 		std::string tag;
 		time_t when;
 		meta(const std::string& tag = "N/A", time_t when = 0) : tag(tag), when(when) {}

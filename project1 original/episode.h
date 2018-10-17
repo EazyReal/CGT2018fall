@@ -13,7 +13,7 @@
 class statistic;
 
 class episode {
-friend class statistic;
+friend class statistic; // stastistic can access privte of episode
 public:
 	episode() : ep_state(initial_state()), ep_score(0), ep_time(0) { ep_moves.reserve(10000); }
 

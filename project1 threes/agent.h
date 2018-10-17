@@ -74,12 +74,13 @@ public:
 
 
 	virtual action take_action(const board& after) {
-		if(idx == 0) std::shuffle(bag, bag + 3, engine);;
+		if(idx == 0) std::shuffle(bag, bag + 3, engine); //reuse engine ok?
 
-		if(~last_op){
+		if(last_op == -1){ //cant use ~last_op
 			std::shuffle(space.begin(), space.end(), engine);
 			for (int pos : space) {
 				if (after(pos) != 0) continue;
+				printf("\nno op : place bag[%d] = %d @ %d\n", idx, bag[idx], pos);
 				board::cell tile = bag[idx];
 				idx = (idx + 1) % 3;
 				return action::place(pos, tile);
@@ -90,6 +91,7 @@ public:
 			for (int pos : opspace[last_op]) {
 				if (after(pos) != 0) continue;
 				board::cell tile = bag[idx];
+				printf("\nop code = %d : place bag[%d] = %d @ %d\n", last_op, idx, bag[idx], pos);
 				idx = (idx + 1) % 3;
 				return action::place(pos, tile);
 			}
@@ -101,7 +103,7 @@ private:
 	std::array<int, 16> space;
 	int opspace[4][4] = { 12, 13, 14, 15, 0, 4, 8, 12, 0, 1, 2, 3, 3, 7, 11, 15 }; //urdl
 	//std::uniform_int_distribution<int> popup;
-	int bag[3] = {0, 1, 2};
+	int bag[3] = {1, 2, 3};
 	int idx;
 };
 

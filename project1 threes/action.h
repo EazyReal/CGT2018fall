@@ -41,13 +41,13 @@ public:
 	friend std::istream& operator >>(std::istream& in, action& a) { return a << in; }
 
 protected:
-	static constexpr unsigned type_flag(unsigned v) { return v << 24; }
+	static constexpr unsigned type_flag(unsigned v) { return v << 24; } //type_flag def
 
 	typedef std::unordered_map<unsigned, action*> prototype;
 	static prototype& entries() { static prototype m; return m; }
 	virtual action& reinterpret(const action* a) const { return *new (const_cast<action*>(a)) action(*a); }
 
-	unsigned code;
+	unsigned code; //
 };
 
 class action::slide : public action {
@@ -83,8 +83,8 @@ protected:
 
 class action::place : public action {
 public:
-	static constexpr unsigned type = type_flag('p');
-	place(unsigned pos, unsigned tile) : action(place::type | (pos & 0x0f) | (std::min(tile, 35u) << 4)) {}
+	static constexpr unsigned type = type_flag('p'); // 'p'is 2bytes char 32-24=8
+	place(unsigned pos, unsigned tile) : action(place::type | (pos & 0x0f) | (std::min(tile, 35u) << 4)) {} //tile max = 35
 	place(const action& a = {}) : action(a) {}
 	unsigned position() const { return event() & 0x0f; }
 	unsigned tile() const { return event() >> 4; }
