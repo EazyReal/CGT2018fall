@@ -86,7 +86,7 @@ public:
 		for (size_t t = 0, c = 0; c < blk; c += stat[t++]) {
 			if (stat[t] == 0) continue;
 			unsigned accu = std::accumulate(std::begin(stat) + t, std::end(stat), 0);
-			std::cout << "\t" << ((1 << t) & -2u); // type
+			std::cout << "\t" << ((1 << t) & -2u); // type to change
 			std::cout << "\t" << (accu * 100.0 / blk) << "%"; // win rate
 			std::cout << "\t" "(" << (stat[t] * 100.0 / blk) << "%" ")"; // percentage of ending
 			std::cout << std::endl;
@@ -109,7 +109,7 @@ public:
 	void open_episode(const std::string& flag = "") {
 		if (count++ >= limit) data.pop_front();
 		data.emplace_back();
-		data.back().open_episode(flag);
+		data.back().open_episode(flag); //data.back() = the episode
 	}
 
 	void close_episode(const std::string& flag = "") {

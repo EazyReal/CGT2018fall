@@ -89,7 +89,7 @@ public:
 	unsigned position() const { return event() & 0x0f; }
 	unsigned tile() const { return event() >> 4; }
 public:
-	board::reward apply(board& b) const {
+	board::reward apply(board& b) const { //actually do place action to affect board, from ep::apply_action
 		return b.place(position(), tile());
 	}
 

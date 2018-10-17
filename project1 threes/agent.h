@@ -73,7 +73,7 @@ public:
 		}
 
 
-	virtual action take_action(const board& after) {
+	virtual action take_action(const board& after) { //affect ep_state
 		if(idx == 0) std::shuffle(bag, bag + 3, engine); //reuse engine ok?
 
 		if(last_op == -1){ //cant use ~last_op
@@ -83,7 +83,7 @@ public:
 				printf("\nno op : place bag[%d] = %d @ %d\n", idx, bag[idx], pos);
 				board::cell tile = bag[idx];
 				idx = (idx + 1) % 3;
-				return action::place(pos, tile);
+				return action::place(pos, tile); //how to affect ep_state
 			}
 			return action();
 		}else{

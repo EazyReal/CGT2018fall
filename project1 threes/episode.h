@@ -17,7 +17,7 @@ class statistic;
 class episode {
 friend class statistic;
 public:
-	episode() : ep_state(initial_state()), ep_score(0), ep_time(0) { ep_moves.reserve(10000); }
+	episode() : ep_state(initial_state()), ep_score(0), ep_time(0) { ep_moves.reserve(10000); } //care overload
 
 public:
 	board& state() { return ep_state; }
@@ -33,8 +33,8 @@ public:
 	bool apply_action(action move) {
 		board::reward reward = move.apply(state());
 		if (reward == -1) return false;
-		ep_moves.emplace_back(move, reward, millisec() - ep_time);
-		ep_score += reward;
+		ep_moves.emplace_back(move, reward, millisec() - ep_time); //construct directly at vector back //move list construction
+		ep_score += reward; //no need to change if use diff of round score
 		return true;
 	}
 	agent& take_turns(agent& play, agent& evil) {
@@ -123,7 +123,7 @@ protected:
 
 		operator action() const { return code; }
 		friend std::ostream& operator <<(std::ostream& out, const move& m) {
-			out << m.code; //code??
+			out << m.code; //code is of type action
 			if (m.reward) out << '[' << std::dec << m.reward << ']';
 			if (m.time) out << '(' << std::dec << m.time << ')';
 			return out;
@@ -160,7 +160,7 @@ protected:
 	};
 
 	static board initial_state() {
-		return {};
+		return {}; //==all zeros???
 	}
 	static time_t millisec() {
 		auto now = std::chrono::system_clock::now().time_since_epoch();
