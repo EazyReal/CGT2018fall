@@ -80,7 +80,7 @@ public:
 			std::shuffle(space.begin(), space.end(), engine);
 			for (int pos : space) {
 				if (after(pos) != 0) continue;
-				printf("\nno op : place bag[%d] = %d @ %d\n", idx, bag[idx], pos);
+				//printf("\nno op : place bag[%d] = %d @ %d\n", idx, bag[idx], pos);
 				board::cell tile = bag[idx];
 				idx = (idx + 1) % 3;
 				return action::place(pos, tile); //how to affect ep_state
@@ -91,7 +91,7 @@ public:
 			for (int pos : opspace[last_op]) {
 				if (after(pos) != 0) continue;
 				board::cell tile = bag[idx];
-				printf("\nop code = %d : place bag[%d] = %d @ %d\n", last_op, idx, bag[idx], pos);
+				//printf("\nop code = %d : place bag[%d] = %d @ %d\n", last_op, idx, bag[idx], pos);
 				idx = (idx + 1) % 3;
 				return action::place(pos, tile);
 			}

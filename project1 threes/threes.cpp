@@ -71,6 +71,7 @@ int main(int argc, const char* argv[]) {
 		while (true) {
 			agent& who = game.take_turns(play, evil); //see who should play
 			action move = who.take_action(game.state()); //agent.take_action return action
+			//
 			std::cout << move; //will output in save file anyway
 			//std::cout << game.state(); //
 			if (game.apply_action(move) != true) break; //actually do action
@@ -87,7 +88,7 @@ int main(int argc, const char* argv[]) {
 		stat.summary();
 	}
 
-	std::cout << stat;
+	std::cout << stat;//forget if its my addition or original, checked my addition
 
 	if (save.size()) {
 		std::ofstream out(save, std::ios::out | std::ios::trunc);
