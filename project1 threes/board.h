@@ -57,7 +57,7 @@ public:
 	 */
 	reward place(unsigned pos, cell tile) {
 		if (pos >= 16) return -1;
-		if (tile != 1 && tile != 2) return -1;
+		if (tile != 1 && tile != 2 && tile != 3) return -1; // need to change:bugged for 1 day(solved by judge: action=??)
 		operator()(pos) = tile; //actually place
 		return 0;
 	}
