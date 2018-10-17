@@ -101,7 +101,7 @@ public:
 
 private:
 	std::array<int, 16> space;
-	int opspace[4][4] = { 12, 13, 14, 15, 0, 4, 8, 12, 0, 1, 2, 3, 3, 7, 11, 15 }; //urdl
+	int opspace[4][4] = { {12, 13, 14, 15}, {0, 4, 8, 12}, {0, 1, 2, 3}, {3, 7, 11, 15} }; //urdl
 	//std::uniform_int_distribution<int> popup;
 	int bag[3] = {1, 2, 3};
 	int idx;
