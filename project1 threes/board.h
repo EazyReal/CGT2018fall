@@ -80,7 +80,7 @@ public:
 	//to do
 
 	inline bool mergible(cell a, cell b){
-		printf("\n hi \n")
+		printf("\n hi \n");
 		if(a == 1 && b == 2) return true;
 		if(a == 2 && b == 1) return true;
 		return a == b;

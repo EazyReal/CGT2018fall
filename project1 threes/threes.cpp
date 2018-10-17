@@ -67,7 +67,7 @@ int main(int argc, const char* argv[]) {
 		stat.open_episode(play.name() + ":" + evil.name());
 		episode& game = stat.back(); // = data(list of eps).back()
 
-		last_op = -1;
+		last_op = -1; //init last_op
 		while (true) {
 			agent& who = game.take_turns(play, evil); //see who should play
 			action move = who.take_action(game.state()); //agent.take_action return action
