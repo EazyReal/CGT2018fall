@@ -58,7 +58,7 @@ public:
 	reward place(unsigned pos, cell tile) {
 		if (pos >= 16) return -1;
 		if (tile != 1 && tile != 2) return -1;
-		operator()(pos) = tile;
+		operator()(pos) = tile; //actually place
 		return 0;
 	}
 
@@ -80,6 +80,7 @@ public:
 	//to do
 
 	inline bool mergible(cell a, cell b){
+		printf("\n hi \n")
 		if(a == 1 && b == 2) return true;
 		if(a == 2 && b == 1) return true;
 		return a == b;
