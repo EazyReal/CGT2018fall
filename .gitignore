@@ -1,0 +1,4 @@
+#for git ignore function
+
+#ignore ds store
+*.DS_Store
