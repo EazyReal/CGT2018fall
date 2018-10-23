@@ -73,8 +73,11 @@ public:
 		}
 
 
-	virtual action take_action(const board& after) { //affect ep_state
-		if(idx == 0) std::shuffle(bag, bag + 3, engine); //reuse engine ok?
+	virtual action take_action(const board& after) { //affect ep_state by returning action
+		if(idx == 0){
+			std::shuffle(bag, bag + 3, engine); //reuse engine ok?
+			//printf("\nshuffle!!!\n");
+		}
 
 		if(last_op == -1){ //cant use ~last_op, maybe type issue
 			std::shuffle(space.begin(), space.end(), engine);

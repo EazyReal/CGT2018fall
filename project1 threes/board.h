@@ -89,9 +89,11 @@ public:
 		board prev = *this;
 		// <- 1 2 3 => 3 3 0 ?
 		// <- 3 3 3 => 6 3 0 or 3 6 0?
-		//need to be blocked to be merged one time merged one on one line
+		//need to be blocked to be merged
+		//one time merged one on one line
+		//mergible 0 special case / or only deal with left
 
-		reward score = 0;
+		//reward score = 0;
 		for (int r = 0; r < 4; r++) {
 			bool merged = false;
 			auto& row = tile[r];
@@ -102,7 +104,7 @@ public:
 				row[c] = 0;
 				if (hold) {
 					if (mergible(tile, hold) &&  !merged) {
-						row[top++] = ++tile;
+						row[top++] = tile + hold; //from ++tile to tile + hold
 						//score += (1 << tile); //
 						hold = 0;
 						merged = true;
@@ -118,7 +120,7 @@ public:
 		}
 
 		//reward = f(*this)-f(prev) where f = score function sigma(3(log2(s/3)+1))
-		return (*this != prev) ? score : -1;
+		return (*this != prev) ? 0 : -1;
 	}
 	reward slide_right() {
 		reflect_horizontal();

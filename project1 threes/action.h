@@ -113,6 +113,6 @@ public:
 		return in;
 	}
 protected:
-	action& reinterpret(const action* a) const { return *new (const_cast<action*>(a)) place(*a); }
+	action& reinterpret(const action* a) const { return *new (const_cast<action*>(a)) place(*a); } //hard to read
 	static __attribute__((constructor)) void init() { entries()[type_flag('p')] = new place; }
 };
