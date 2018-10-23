@@ -82,7 +82,7 @@ public:
 	inline bool mergible(cell a, cell b){
 		if(a == 1 && b == 2) return true;
 		if(a == 2 && b == 1) return true;
-		return a == b;
+		if(a == b) return (a == 2 || a == 1) ? false : true;
 	}
 
 	reward slide_left() {
@@ -93,30 +93,28 @@ public:
 		//one time merged one on one line
 		//mergible 0 special case / or only deal with left
 
-		//reward score = 0;
+		//reward score = 0; //10/23 11:30 rewrite should be good
 		for (int r = 0; r < 4; r++) {
 			bool merged = false;
 			auto& row = tile[r];
-			int top = 0, hold = 0;
-			for (int c = 0; c < 4; c++) {
-				int tile = row[c];
-				//if (tile == 0) continue;
-				row[c] = 0;
-				if (hold) {
-					if (mergible(tile, hold) &&  !merged) {
-						row[top++] = tile + hold; //from ++tile to tile + hold
-						//score += (1 << tile); //
-						hold = 0;
+			//bool blocked = (row[0] != 0);
+			for (int c = 1; c < 4; c++) {
+				int now = row[c];
+				int pre = row[c-1];
+				if (now == 0) continue;
+				if (pre != 0) {
+					if (mergible(now, pre) &&  !merged) {
+						row[c-1] = now + pre; 
+						row[c] = 0;
 						merged = true;
 					} else {
-						row[top++] = hold;
-						hold = tile;
+						continue;
 					}
 				} else {
-					hold = tile;
+					row[c-1] = now + pre; //pre = 0
+					row[c] = 0;
 				}
 			}
-			if (hold) tile[r][top] = hold;
 		}
 
 		//reward = f(*this)-f(prev) where f = score function sigma(3(log2(s/3)+1))
@@ -185,7 +183,7 @@ public:
 		out << "+------------------------+" << std::endl;
 		for (auto& row : b.tile) {
 			out << "|" << std::dec;
-			for (auto t : row) out << std::setw(6) << ((1 << t) & -2u);//
+			for (auto t : row) out << std::setw(6) << t;//((1 << t) & -2u);//
 			out << "|" << std::endl;
 		}
 		out << "+------------------------+" << std::endl;

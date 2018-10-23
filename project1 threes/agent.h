@@ -69,9 +69,12 @@ class rndenv : public random_agent { //evil as instance
 public:
 	rndenv(const std::string& args = "") : random_agent("name=random role=environment " + args),
 		space({ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 })/*, popup(0, 9)*/ {
-			idx = 0;
+			idx = 0; //consruction wont re run for another episode
 		}
 
+	virtual void open_episode(const std::string& flag = "") {
+		idx = 0;
+	}
 
 	virtual action take_action(const board& after) { //affect ep_state by returning action
 		if(idx == 0){
