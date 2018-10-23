@@ -2,6 +2,7 @@
 #include <array>
 #include <iostream>
 #include <iomanip>
+#include <cmath>
 
 /**
  * array-based board for 2048
@@ -82,18 +83,28 @@ public:
 	inline bool mergible(cell a, cell b){
 		if(a == 1 && b == 2) return true;
 		if(a == 2 && b == 1) return true;
-		if(a == b) return (a == 2 || a == 1) ? false : true;
+		if(a == b) return (a == 2 || a == 1 || a == 6144) ? false : true; //max tile dealt with
+	}
+
+	// 3^(log2(s/3)+1)
+	inline reward scoref(const board& b){ //speed up?
+		reward sum = 0;
+		for (int r = 0; r < 4; r++) {
+			for (int c = 0; c < 4; c++) {
+				int x = b.tile[r][c];
+				if(x != 0 && x != 1 && x != 2) sum += int(pow(3, int(log2(x/3))+1)); //pow work ^ not w
+			}
+		}
+		return sum;
 	}
 
 	reward slide_left() {
 		board prev = *this;
-		// <- 1 2 3 => 3 3 0 ?
-		// <- 3 3 3 => 6 3 0 or 3 6 0?
 		//need to be blocked to be merged
 		//one time merged one on one line
 		//mergible 0 special case / or only deal with left
+		//10/23 11:30 rewrite is good
 
-		//reward score = 0; //10/23 11:30 rewrite should be good
 		for (int r = 0; r < 4; r++) {
 			bool merged = false;
 			auto& row = tile[r];
@@ -118,7 +129,7 @@ public:
 		}
 
 		//reward = f(*this)-f(prev) where f = score function sigma(3(log2(s/3)+1))
-		return (*this != prev) ? 0 : -1;
+		return (*this != prev) ? (scoref(*this) - scoref(prev)) : -1;
 	}
 	reward slide_right() {
 		reflect_horizontal();

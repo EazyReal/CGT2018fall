@@ -60,7 +60,7 @@ public:
 		return b.slide(event());
 	}
 	std::ostream& operator >>(std::ostream& out) const {
-		return out << '#' << ("URDL")[event() & 0b11];
+		return out << '#' << ("URDL")[event() & 0b11]; //good way to express
 	}
 	std::istream& operator <<(std::istream& in) {
 		if (in.peek() == '#') {
