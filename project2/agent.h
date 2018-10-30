@@ -76,7 +76,7 @@ protected:
 class rndenv : public random_agent { //evil as instance
 public:
 	rndenv(const std::string& args = "") : random_agent("name=random role=environment " + args),
-		space({ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 })/*, popup(0, 9)*/ {
+		space({{ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 }})/*, popup(0, 9)*/ {
 			idx = 0; //consruction wont re run for another episode
 		}
 
@@ -129,7 +129,7 @@ private:
 class player : public agent { //no need random?
 public:
 	player(const std::string& args = "") : agent("name=n_tuple_net role=player " + args),
-		opcode({ 0, 1, 2, 3 }) { }
+		opcode({{ 0, 1, 2, 3 }}) { }
 
 	/*virtual void close_episode(const std::string& flag = "") {
 		tnet.fit_ep(stat.data.back(), alpha = 0.1/8);

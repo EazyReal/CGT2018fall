@@ -120,7 +120,7 @@ public:
 
 	//void train(int ep_nums = 1000){} write in main?
 
-	void fit_ep (episode ep, float alpha = 0.1f/(N_TUPLE*N_isomorphism/2)) { //why not n_iso
+	void fit_ep (episode ep, float alpha = 0.1f/(N_TUPLE*N_isomorphism)) { //why not n_iso
 		const auto& moves = ep.ep_moves;
 		const auto& states = ep.ep_states;
 

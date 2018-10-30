@@ -86,6 +86,7 @@ public:
 		if(a == 1 && b == 2) return true;
 		if(a == 2 && b == 1) return true;
 		if(a == b) return (a == 2 || a == 1 || a == 6144) ? false : true; //max tile dealt with
+		else return false;
 	}
 
 	// 3^(log2(s/3)+1)
