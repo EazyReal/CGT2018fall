@@ -13,15 +13,11 @@
 #include "statistic.h"
 
 //instrustions
-//train with td(0)
+//n_tuple net trained with td(0)
 
-const int N = pow(15, 4);
+const int N = pow(15, 4) + 500;
 const int N_TUPLE = 8;
 const int N_isomorphism = 8; //rotattions + mirrored rotations
-//typedef std::vector<float> vec;
-//typedef std::vector<row> vec_r;
-//typedef std::map<board, int>;
-//vec b2keys(const board& b){ }//pass by value ok?
 
 class weight {
 friend class agent;
@@ -65,7 +61,7 @@ public:
 	n_tuple_net(const n_tuple_net& net) = default;
 
 public:
-	typedef std::array< std::array<int, N_TUPLE>, N_isomorphism> fids; 
+	typedef std::array< std::array<int, N_TUPLE>, N_isomorphism> fids; //a[iso][tuple]
 
 	void reset(size_t len){
 		for(int i = 0 ; i < N_TUPLE ; i++ ) w[i] = weight(len);
@@ -73,7 +69,7 @@ public:
 
 	static inline int num2id(int num){
 		if( num >= 0 && num <= 3) return num;
-		return log2(num/3) + 3; //shoud work
+		else return int(log2(num/3)) + 3; //shoud work
 	}
 
 	static fids get_ids(board::board b){
@@ -105,7 +101,7 @@ public:
 			for(int i = 0 ; i < 4 ; i++ ){
 				int sum = 0;
 				for(int j = 0 ; j < 4 ; j++ ) sum += pow(15, i)*num2id(b[j][i]);
-				ids[ii][i+4] = sum;
+				ids[ii][i+4] = sum; //bug w
 			}
 		}
 		b.transpose();
@@ -113,39 +109,48 @@ public:
 		return ids;
 	}
 
+	inline float get_v(const fids& ids)
+	{
+		float ret = 0.0;
+		for(int j = 0 ; j < N_isomorphism ; j++) for(int jj = 0 ; jj < N_TUPLE ; jj++) { ret += w[jj][ids[j][jj]];}
+		//printf("%f\n", ret); //lr = 0.1/8 doesnt converge!!!! overflow //lr = 0.1/32 converged
+
+		return ret;
+	}
+
 	//void train(int ep_nums = 1000){} write in main?
 
-	void fit_ep (episode ep, float alpha = 0.1f/N_TUPLE) { //train with eps or create eps?
+	void fit_ep (episode ep, float alpha = 0.1f/(N_TUPLE*N_isomorphism/2)) { //why not n_iso
 		const auto& moves = ep.ep_moves;
 		const auto& states = ep.ep_states;
 
 		//mbi[get_id(states.back())] = 0; //terminal case td target = 0 => train to 0
-		float vlast[N_isomorphism][N_TUPLE] = {0.0}; //for update
-		int k = ( moves.back().code.type() == action::type_flag('s') ) ? 3 : 4 ; //size-k is first after (slide) state
+		float vlast;
+		float vnow;
+
+		int k = ( moves.back().code.type() == action::type_flag('s') ) ? 3 : 4 ; //size-k is first after (slide) state and not last
 		fids ids = get_ids(states[states.size() - k + 2]);
+		vlast = 0.0;
+		vnow = get_v(ids);
 		for(int j = 0 ; j < N_isomorphism ; j++){ //actually as a*b 
 			for(int jj = 0 ; jj < N_TUPLE ; jj++)
 			{
 				float& vt = w[jj][ids[j][jj]];
-				vt = (1.0 - alpha) * vt;
-				vlast[j][jj] = vt;
+				vt -= alpha * vnow; //vt += alpha * (0.0 - vnow);
+				vlast += vt;
 			}
 		}
 
 		for(int i = states.size() - k ; i > 9 ; i -= 2){ //must have 9 board with placement, 0 = {0}, 9 = after 9th placement
 			fids ids = get_ids(states[i]);
-			for(int j = 0 ; j < N_isomorphism ; j++){ //actually as a*b 
-				for(int jj = 0 ; jj < N_TUPLE ; jj++)
-				{
-					float& vt = w[jj][ids[j][jj]];
-					vt = vt + alpha * (vlast[j][jj] + moves[i-1].reward - vt);
-					vlast[j][jj] = vt;
-				}
-			}
+			vnow = get_v(ids);
+			for(int j = 0 ; j < N_isomorphism ; j++) for(int jj = 0 ; jj < N_TUPLE ; jj++)
+				w[jj][ids[j][jj]] += alpha * (vlast + moves[i-1].reward - vnow);
+			vlast = get_v(ids);
 		} 
 	}
 
-protected:
+public:
 	//std::map<board::board, int> mbi[i]; //should be row  
 	weight w[N_TUPLE];
 };

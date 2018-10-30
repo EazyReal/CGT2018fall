@@ -62,7 +62,7 @@ public:
 		if (pos >= 16) return -1;
 		if (tile != 1 && tile != 2 && tile != 3) return -1; // need to change:bugged for 1 day(solved by judge: action=??)
 		operator()(pos) = tile; //actually place
-		return 0;
+		return tile == 3 ? 3 : 0; //mismatch solved
 	}
 
 	/**
@@ -94,7 +94,7 @@ public:
 		for (int r = 0; r < 4; r++) {
 			for (int c = 0; c < 4; c++) {
 				int x = b.tile[r][c];
-				if(x != 0 && x != 1 && x != 2) sum += int(pow(3, int(log2(x/3))+1)); 
+				if(x > 2) sum += pow(3, log2(x/3)+1); //why bugged
 			}
 		}
 		return sum;
@@ -130,8 +130,8 @@ public:
 			}
 		}
 
-		//reward = f(*this)-f(prev) where f = score function sigma(3(log2(s/3)+1))
 		return (*this != prev) ? (scoref(*this) - scoref(prev)) : -1;
+		//return (*this != prev) ? 1 : -1;
 	}
 	reward slide_right() {
 		reflect_horizontal();

@@ -50,6 +50,12 @@ public:
 	 *  '93.7%': 93.7% (937 games) reached 8192-tiles (a.k.a. win rate of 8192-tile)
 	 *  '22.4%': 22.4% (224 games) terminated with 8192-tiles (the largest)
 	 */
+
+	static inline int num2id(int num){
+		if( num >= 0 && num <= 3) return num;
+		return log2(num/3) + 3; //shoud work
+	}
+
 	void show(bool tstat = true) const {
 		size_t blk = std::min(data.size(), block);
 		size_t stat[64] = { 0 };
@@ -61,7 +67,7 @@ public:
 			auto& ep = *(--it);
 			sum += ep.score();
 			max = std::max(ep.score(), max);
-			stat[*std::max_element(&(ep.state()(0)), &(ep.state()(16)))]++;
+			stat[num2id(*std::max_element(&(ep.state()(0)), &(ep.state()(16))))]++; //num2id
 			sop += ep.step();
 			pop += ep.step(action::slide::type);
 			eop += ep.step(action::place::type);

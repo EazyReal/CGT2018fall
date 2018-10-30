@@ -37,7 +37,7 @@ public:
 public:
 	operator unsigned() const { return code; }
 	unsigned type() const { return code & type_flag(-1u); } //1110000..(24)
-	unsigned event() const { return code & ~type(); }
+	unsigned event() const { return code & ~type(); } //remove type
 	friend std::ostream& operator <<(std::ostream& out, const action& a) { return a >> out; }
 	friend std::istream& operator >>(std::istream& in, action& a) { return a << in; }
 

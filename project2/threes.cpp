@@ -90,7 +90,7 @@ int main(int argc, const char* argv[]) {
 		play.close_episode(win.name());
 		evil.close_episode(win.name());
 
-		tnet.fit_ep(stat.back()); //lr adjustment??
+		tnet.fit_ep(stat.back(), 0.1/32); //lr adjustment?? //0.1/32 worked 0.1/8 diverged
 	}
 
 	if (summary) {

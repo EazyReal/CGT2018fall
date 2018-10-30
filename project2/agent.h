@@ -5,6 +5,7 @@
 #include <map>
 #include <type_traits>
 #include <algorithm>
+#include <climits>
 #include "board.h"
 #include "action.h"
 #include "model.h"
@@ -17,6 +18,8 @@
 extern int last_op;
 extern n_tuple_net tnet;
 extern const int N_TUPLE;
+extern const int N_isomorphosm;
+const float float_min = -std::numeric_limits<float>::max();
 
 class agent {
 //friend class epsisode;
@@ -135,17 +138,21 @@ public:
 	virtual action take_action(const board& before) { //to work with 
 		bool e_valid = false;
 		int best_op = -1;
-		float max_v = 0.0; //max after state explored
+		float max_v = float_min; //max after state explored
 		float op_v;
 		for (int op : opcode) {
+			//op = 3 - op;
 			board::board b = board(before);
 			board::reward reward = b.slide(op);
 
 			if(reward == -1) continue; else e_valid = true; //
 
 			n_tuple_net::fids ids = n_tuple_net::get_ids(b);
-			op_v = float(reward);
-			for(int i = 0 ; i < N_TUPLE ; i++ ) op_v += ids[0][i];
+			//printf("%f %f \n", float(reward), tnet.get_v(ids));
+			op_v = float(reward) + tnet.get_v(ids);
+			//op_v = float(reward);
+			//for(int i = 0; i < N_isomorphism ; i++ )for(int j = 0 ; j < N_TUPLE ; j++ ) op_v += tnet.w[j][ids[i][j]];
+			//printf("%f %f \n", float(reward), tnet.get_v(ids));
 			if(op_v >= max_v){
 				max_v = op_v;
 				best_op = op;
