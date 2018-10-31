@@ -15,3 +15,11 @@ $ ./exthrees --save=stat.txt # existing file will be overwrited
 
 To load and review the statistic result from a file
 $ ./exthrees --load=stat.txt
+
+###by 0712238 maxwill lin
+
+To load/save n tuple net from/to a file
+$ ./exthrees --loadw/savew=weight.txt
+
+To disable learning 
+$ ./exthrees --nolearn

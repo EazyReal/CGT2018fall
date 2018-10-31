@@ -149,6 +149,17 @@ public:
 			vlast = get_v(ids);
 		} 
 	}
+public:
+	friend std::ostream& operator <<(std::ostream& out, const n_tuple_net& tnet) {
+		auto& w = tnet.w;
+		for(int i = 0 ; i < N_TUPLE ; i++) out << w[i];
+		return out;
+	}
+	friend std::istream& operator >>(std::istream& in, n_tuple_net& tnet) {
+		auto& w = tnet.w;
+		for(int i = 0 ; i < N_TUPLE ; i++) in >> w[i];
+		return in;
+	}
 
 public:
 	//std::map<board::board, int> mbi[i]; //should be row  

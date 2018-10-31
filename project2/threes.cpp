@@ -17,6 +17,8 @@
 #include "statistic.h"
 #include "model.h"
 
+bool LEARN_ENABLE = true;
+
 extern const int N;
 extern const int N_TUPLE;
 extern const int N_isomorphism;
@@ -31,7 +33,7 @@ int main(int argc, const char* argv[]) {
 
 	size_t total = 1000, block = 0, limit = 0;
 	std::string play_args, evil_args;
-	std::string load, save;
+	std::string load, save, loadw, savew;
 	bool summary = false;
 	for (int i = 1; i < argc; i++) {
 		std::string para(argv[i]);
@@ -51,7 +53,13 @@ int main(int argc, const char* argv[]) {
 			save = para.substr(para.find("=") + 1);
 		} else if (para.find("--summary") == 0) {
 			summary = true;
-		}
+		} else if (para.find("--loadw=") == 0) {
+			loadw = para.substr(para.find("=") + 1);
+		} else if (para.find("--savew=") == 0) {
+			savew = para.substr(para.find("=") + 1);
+		} else if (para.find("--nolearn") == 0) {
+			LEARN_ENABLE = false;
+		} 
 	}
 
 	statistic stat(total, block, limit);
@@ -63,8 +71,21 @@ int main(int argc, const char* argv[]) {
 		summary |= stat.is_finished();
 	}
 
+	if (loadw.size()) {
+		std::ifstream in(loadw, std::ios::in);
+		in >> tnet;
+		in.close();
+	}
+
 	player play(play_args);
 	rndenv evil(evil_args);
+
+	const float lr_init = 0.1/32;
+	const float decay_rate = 0.9;
+	const int decay_ep = 100;
+	int ep_count = 0;
+	float decay = 1.0;
+	if(LEARN_ENABLE) tnet.reset(N);
 
 	while (!stat.is_finished()) {
 		play.open_episode("~:" + evil.name()); //no realize virtual wtf
@@ -90,8 +111,13 @@ int main(int argc, const char* argv[]) {
 		play.close_episode(win.name());
 		evil.close_episode(win.name());
 
-		tnet.fit_ep(stat.back(), 0.1/64); //lr adjustment?? //0.1/32 worked 0.1/8 diverged
+		if(LEARN_ENABLE){
+			tnet.fit_ep(stat.back(), lr_init*decay); //lr adjustment?? //0.1/32 worked 0.1/8 diverged
+			ep_count++;
+			if(ep_count%decay_ep == 0) decay = decay * decay_rate;
 		//64better than 32, 0 better than 16 and 32...
+		//improvement record? 
+		}
 	}
 
 	if (summary) {
@@ -99,6 +125,11 @@ int main(int argc, const char* argv[]) {
 	}
 
 	//std::cout << stat;//forget if its my addition or original, checked my addition
+	if (savew.size()) {
+		std::ofstream out(savew, std::ios::out | std::ios::trunc);
+		out << tnet;
+		out.close();
+	}
 
 	if (save.size()) {
 		std::ofstream out(save, std::ios::out | std::ios::trunc);
