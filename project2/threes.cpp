@@ -80,7 +80,7 @@ int main(int argc, const char* argv[]) {
 	player play(play_args);
 	rndenv evil(evil_args);
 
-	const float lr_init = 0.1/32;
+	const float lr_init = 0.1/(N_TUPLE*N_isomorphism/2);
 	const float decay_rate = 0.9;
 	const int decay_ep = 100;
 	int ep_count = 0;
@@ -99,9 +99,6 @@ int main(int argc, const char* argv[]) {
 		while (true) {
 			agent& who = game.take_turns(play, evil); //see who should play
 			action move = who.take_action(game.state()); //agent.take_action return action
-			//
-			//std::cout << move << std::endl; //will output in save file anyway
-			//std::cout << game.state(); //
 			if (game.apply_action(move) != true) break; //actually do action
 			if (who.check_for_win(game.state())) break;
 		}
@@ -124,7 +121,8 @@ int main(int argc, const char* argv[]) {
 		stat.summary();
 	}
 
-	//std::cout << stat;//forget if its my addition or original, checked my addition
+	//std::cout << stat;
+
 	if (savew.size()) {
 		std::ofstream out(savew, std::ios::out | std::ios::trunc);
 		out << tnet;

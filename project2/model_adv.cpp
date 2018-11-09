@@ -17,8 +17,8 @@
 
 //824 7719 @ 5000ep with 1/320 0.9/100ep
 
-const int N = pow(15, 4) + 500;
-const int N_TUPLE = 8;
+const int N = pow(15, 6) + 500;
+const int N_TUPLE = 4*8;
 const int N_isomorphism = 8; //rotattions + mirrored rotations
 
 class weight {
