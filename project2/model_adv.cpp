@@ -14,6 +14,7 @@
 
 //instrustions
 //n_tuple net trained with td(0)
+//temporal coherant learning
 
 //824 7719 @ 5000ep with 1/320 0.9/100ep
 
@@ -115,6 +116,7 @@ public:
 	inline float get_v(const fids& ids)
 	{
 		float ret = 0.0;
+		//can use an iso to valuate?
 		for(int i_iso = 0 ; i_iso < N_isomorphism ; i_iso++) for(int i_tup = 0 ; i_tup < N_TUPLE ; i_tup++) { ret += w[i_tup][ids[i_iso][i_tup]];}
 		//printf("%f\n", ret); //lr = 0.1/8 doesnt converge!!!! overflow //lr = 0.1/32 converged
 

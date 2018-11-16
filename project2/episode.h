@@ -34,7 +34,7 @@ public:
 	}
 	bool apply_action(action move) {
 		//added state for training
-		ep_states.push_back(ep_state); //state return reference which is no good
+		ep_states.push_back(ep_state); //dont use emplace to make copy of state istead of reference of state
 		board::reward reward = move.apply(state());
 		if (reward == -1) return false;
 		ep_moves.emplace_back(move, reward, millisec() - ep_time); //construct directly at vector back //move list construction
@@ -46,6 +46,7 @@ public:
 		return (std::max(step(), size_t(8)) % 2) ? play : evil; //9init
 	}
 	agent& last_turns(agent& play, agent& evil) {
+		//ep_states.push_back(state());
 		return take_turns(evil, play);
 	}
 

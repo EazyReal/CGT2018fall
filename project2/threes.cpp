@@ -17,16 +17,41 @@
 #include "statistic.h"
 #include "model.h"
 
+
 bool LEARN_ENABLE = true;
+
+int last_op = -1;
+n_tuple_net tnet(N);
 
 extern const int N;
 extern const int N_TUPLE;
 extern const int N_isomorphism;
 
-int last_op = -1;
-n_tuple_net tnet(N);
+//const float lr_init = 0.1/(N_TUPLE*N_isomorphism/2); 0.9/100 877/9213 100000 best
+//only some none zero weight
+float lr_init = 0.1/N_TUPLE;
+float decay_rate = 1.0;
+int decay_ep = 100;
+int ep_count = 0;
+float decay = 1.0;
 
 int main(int argc, const char* argv[]) {
+
+	/*
+	using std::cout;
+	using std::endl;
+	board b ;
+	for(int i = 0; i < 16; i++) b(i) = 1;
+	std::cout << b << std::endl;
+	auto x = n_tuple_net::get_ids(b);
+	for(int i = 0; i < N_isomorphism; i++)
+	{
+		for(int j = 0; j < N_TUPLE; j++) cout << x[i][j] << ' ';
+		cout << endl;
+	}
+	return 0;
+	*/
+
 	std::cout << "Threes-Demo: ";
 	std::copy(argv, argv + argc, std::ostream_iterator<const char*>(std::cout, " "));
 	std::cout << std::endl << std::endl;
@@ -59,7 +84,10 @@ int main(int argc, const char* argv[]) {
 			savew = para.substr(para.find("=") + 1);
 		} else if (para.find("--nolearn") == 0) {
 			LEARN_ENABLE = false;
-		} 
+		} else if (para.find("--lr") == 0) {
+			//printf("%s\n", para.substr(para.find("=")+1).c_str());
+			lr_init = std::stof(para.substr(para.find("=")+1));
+		}
 	}
 
 	statistic stat(total, block, limit);
@@ -80,12 +108,7 @@ int main(int argc, const char* argv[]) {
 	player play(play_args);
 	rndenv evil(evil_args);
 
-	const float lr_init = 0.1/(N_TUPLE*N_isomorphism/2);
-	const float decay_rate = 0.9;
-	const int decay_ep = 100;
-	int ep_count = 0;
-	float decay = 1.0;
-	if(LEARN_ENABLE) tnet.reset(N);
+	//if(LEARN_ENABLE) tnet.reset(N);
 
 	while (!stat.is_finished()) {
 		play.open_episode("~:" + evil.name()); //no realize virtual wtf
