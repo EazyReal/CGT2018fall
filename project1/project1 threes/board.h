@@ -92,7 +92,7 @@ public:
 		for (int r = 0; r < 4; r++) {
 			for (int c = 0; c < 4; c++) {
 				int x = b.tile[r][c];
-				if(x != 0 && x != 1 && x != 2) sum += int(pow(3, int(log2(x/3))+1)); //pow work ^ not w
+				if(x != 0 && x != 1 && x != 2) sum += pow(3, int(log2(x/3))+1); //pow work ^ not w
 			}
 		}
 		return sum;

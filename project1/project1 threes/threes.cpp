@@ -88,7 +88,7 @@ int main(int argc, const char* argv[]) {
 		stat.summary();
 	}
 
-	std::cout << stat;//forget if its my addition or original, checked my addition
+	//std::cout << stat;//forget if its my addition or original, checked my addition
 
 	if (save.size()) {
 		std::ofstream out(save, std::ios::out | std::ios::trunc);
